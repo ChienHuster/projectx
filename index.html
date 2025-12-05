@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,16 +84,20 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .animation-delay-2000 { animation-delay: 2s; }
+        
+        /* Text Outline cho tiêu đề để dễ đọc trên mọi nền */
+        .text-shadow-sm { text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .text-shadow-lg { text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
     </style>
 </head>
 <body class="font-sans text-gray-700 bg-brand-gray antialiased">
 
     <!-- NAVIGATION BAR -->
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-white">
+                    <div class="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-microphone-lines"></i>
                     </div>
                     <span class="font-heading font-bold text-xl text-brand-dark tracking-wide">ULIS <span class="text-brand-primary">Global Voices</span></span>
@@ -128,19 +132,74 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="home" class="pt-20 bg-brand-primary">
-        <div class="w-full relative shadow-2xl">
-            <!-- QUAN TRỌNG: Hãy để file ảnh 'background.jpg' cùng thư mục với file này -->
-            <img src="background.jpg" alt="ULIS Global Voices Banner" class="w-full h-auto object-cover block mx-auto">
+    <section id="home" class="relative pt-20 min-h-[700px] flex items-center justify-center overflow-hidden">
+        <!-- Background Image Container -->
+        <div class="absolute inset-0 z-0">
+             <img 
+                src="background.png" 
+                alt="Background" 
+                class="w-full h-full object-cover"
+                id="hero-image"
+                onerror="handleImageError(this)"
+            >
+            <script>
+                function handleImageError(img) {
+                    img.onerror = null; 
+                    if (img.src.indexOf('background.png') !== -1) {
+                        console.log("Thử load file 'background' không đuôi...");
+                        img.src = 'background';
+                        img.onerror = function() {
+                            this.src = 'https://placehold.co/1920x1080/003366/FFFFFF?text=Background+Image+Error';
+                        };
+                    } else {
+                        img.src = 'https://placehold.co/1920x1080/003366/FFFFFF?text=Background+Image+Error';
+                    }
+                }
+            </script>
+            <!-- Overlay màu tối (đậm hơn chút ở phần trên để rõ chữ header) -->
+            <div class="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-brand-dark/50 to-brand-dark/70"></div>
         </div>
-        <div class="bg-brand-primary py-6 shadow-inner border-t border-white/10">
-            <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-center items-center gap-6">
-                <span class="text-white font-medium text-lg hidden sm:block">Bạn đã sẵn sàng lắng nghe?</span>
-                <div class="flex gap-4">
-                    <a href="#library" class="px-8 py-3 bg-white text-brand-primary font-bold rounded-full shadow-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 pulse-btn">
-                        <i class="fa-solid fa-play"></i> Khám phá Thư viện
-                    </a>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center py-24">
+            
+            <!-- HEADER INFO GROUP -->
+            <div class="mb-10 animate-fade-in-down flex flex-col items-center">
+                <!-- University Name -->
+                <h3 class="text-white/90 uppercase font-bold tracking-widest text-xs md:text-sm mb-2 text-shadow-sm font-sans">
+                    Đại học Ngoại Ngữ - Đại học Quốc gia Hà Nội
+                </h3>
+                
+                <!-- Logo & Podcast Title Group -->
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-brand-primary shadow-lg">
+                        <i class="fa-solid fa-earth-asia text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-black text-white tracking-wider text-shadow-lg uppercase">
+                        ULIS PODCAST
+                    </h2>
                 </div>
+                <!-- Divider line -->
+                <div class="w-24 h-1 bg-brand-gold rounded-full my-4"></div>
+            </div>
+
+            <!-- MAIN TITLE -->
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-white mb-6 tracking-tight drop-shadow-2xl uppercase">
+                ULIS GLOBAL<br>VOICES
+            </h1>
+            
+            <!-- SUBTITLE/SLOGAN -->
+            <p class="text-xl md:text-3xl text-blue-100 font-heading font-medium max-w-3xl mx-auto mb-12 italic text-shadow-sm">
+                "Hear the voices, feel the world"
+            </p>
+
+            <!-- CTA BUTTONS -->
+            <div class="flex flex-col sm:flex-row gap-5">
+                <a href="#library" class="px-10 py-4 bg-white text-brand-primary font-bold rounded-full shadow-xl hover:bg-brand-gold hover:text-brand-dark transition-all transform hover:scale-105 flex items-center justify-center gap-3 pulse-btn text-lg border-2 border-transparent">
+                    <i class="fa-solid fa-headphones"></i> Nghe ngay
+                </a>
+                <a href="#about" class="px-10 py-4 bg-transparent backdrop-blur-md border-2 border-white text-white font-bold rounded-full shadow-lg hover:bg-white hover:text-brand-primary transition-all flex items-center justify-center gap-3 text-lg">
+                    Về dự án <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </section>
@@ -149,7 +208,7 @@
     <section id="library" class="py-16 bg-brand-gray">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-10">
-                <h2 class="text-brand-primary font-bold tracking-wide uppercase text-sm mb-2">Kênh podcast chính thức của sinh viên trường Đại học Ngoại Ngữ</h2>
+                <h2 class="text-brand-primary font-bold tracking-wide uppercase text-sm mb-2">Kho Tàng Kiến Thức</h2>
                 <h3 class="text-3xl md:text-4xl font-heading font-bold text-gray-900">Thư Viện Podcast Đa Ngôn Ngữ</h3>
             </div>
 
