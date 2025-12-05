@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULIS Global Voices - Hear the voices, feel the world</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Cấu hình màu sắc -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#003366',   /* Xanh biển đậm */
+                            primary: '#005b96', /* Xanh chủ đạo */
+                            light: '#b3cde0',   /* Xanh nhạt */
+                            gold: '#FFD700',    /* Màu vàng giải thưởng */
+                            white: '#ffffff',
+                            gray: '#f4f7f6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Open Sans', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles */
+        body { scroll-behavior: smooth; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .pulse-btn { animation: pulse-animation 2s infinite; }
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .tab-btn.active {
+            background-color: #005b96;
+            color: white;
+            border-color: #005b96;
+        }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .animation-delay-2000 { animation-delay: 2s; }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-brand-gray antialiased">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 bg-brand-primary rounded-full flex items-center justify-center text-white">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+                    <span class="font-heading font-bold text-xl text-brand-dark tracking-wide">ULIS <span class="text-brand-primary">Global Voices</span></span>
+                </div>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="#home" class="font-semibold text-gray-600 hover:text-brand-primary transition">Trang chủ</a>
+                    <a href="#library" class="font-semibold text-gray-600 hover:text-brand-primary transition">Thư viện</a>
+                    <a href="#event" class="font-semibold text-brand-dark hover:text-brand-primary transition relative group">
+                        Sự kiện HOT
+                        <span class="absolute -top-3 -right-3 flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                    </a>
+                    <a href="#about" class="font-semibold text-gray-600 hover:text-brand-primary transition">Về chúng tôi</a>
+                    <a href="#contact" class="px-5 py-2.5 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-dark transition shadow-lg transform hover:scale-105">Đăng ký ngay</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-brand-primary focus:outline-none"><i class="fa-solid fa-bars text-2xl"></i></button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#home" class="block px-3 py-2 font-medium text-gray-700">Trang chủ</a>
+                <a href="#library" class="block px-3 py-2 font-medium text-gray-700">Thư viện</a>
+                <a href="#event" class="block px-3 py-2 font-bold text-red-500">Sự kiện HOT</a>
+                <a href="#about" class="block px-3 py-2 font-medium text-gray-700">Về chúng tôi</a>
+                <a href="#contact" class="block px-3 py-2 font-bold text-brand-primary">Đăng ký ngay</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="pt-20 bg-brand-primary">
+        <div class="w-full relative shadow-2xl">
+            <!-- QUAN TRỌNG: Hãy để file ảnh 'background.jpg' cùng thư mục với file này -->
+            <img src="background.jpg" alt="ULIS Global Voices Banner" class="w-full h-auto object-cover block mx-auto">
+        </div>
+        <div class="bg-brand-primary py-6 shadow-inner border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-center items-center gap-6">
+                <span class="text-white font-medium text-lg hidden sm:block">Bạn đã sẵn sàng lắng nghe?</span>
+                <div class="flex gap-4">
+                    <a href="#library" class="px-8 py-3 bg-white text-brand-primary font-bold rounded-full shadow-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 pulse-btn">
+                        <i class="fa-solid fa-play"></i> Khám phá Thư viện
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIBRARY SECTION -->
+    <section id="library" class="py-16 bg-brand-gray">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <h2 class="text-brand-primary font-bold tracking-wide uppercase text-sm mb-2">Kênh podcast chính thức của sinh viên trường Đại học Ngoại Ngữ</h2>
+                <h3 class="text-3xl md:text-4xl font-heading font-bold text-gray-900">Thư Viện Podcast Đa Ngôn Ngữ</h3>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="openTab('english')" class="tab-btn active px-6 py-2 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition">Tiếng Anh 🇬🇧</button>
+                <button onclick="openTab('chinese')" class="tab-btn px-6 py-2 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition">Tiếng Trung 🇨🇳</button>
+                <button onclick="openTab('japanese')" class="tab-btn px-6 py-2 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition">Tiếng Nhật 🇯🇵</button>
+                <button onclick="openTab('korean')" class="tab-btn px-6 py-2 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition">Tiếng Hàn 🇰🇷</button>
+                <button onclick="openTab('german')" class="tab-btn px-6 py-2 rounded-full border-2 border-brand-primary text-brand-primary font-bold hover:bg-brand-primary hover:text-white transition">Tiếng Đức 🇩🇪</button>
+            </div>
+
+            <!-- ENGLISH -->
+            <div id="english" class="tab-content active">
+                <div class="relative h-48 rounded-2xl overflow-hidden mb-8 shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center"><h2 class="text-4xl font-heading font-bold text-white">English Podcasts</h2></div>
+                </div>
+                <!-- A1 -->
+                <div class="mb-8"><h3 class="font-bold text-2xl mb-4 text-brand-dark border-l-4 border-green-500 pl-3">Trình độ A1</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="https://youtu.be/F9JmnStvchY" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/F9JmnStvchY/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                        <a href="https://youtu.be/7j6Qnjwj64M" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/7j6Qnjwj64M/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                    </div>
+                </div>
+                <!-- A2 -->
+                <div class="mb-8"><h3 class="font-bold text-2xl mb-4 text-brand-dark border-l-4 border-blue-500 pl-3">Trình độ A2</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="https://youtu.be/YSdeI57dAEs" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/YSdeI57dAEs/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                        <a href="https://youtu.be/7CErvBeamP8" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/7CErvBeamP8/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                    </div>
+                </div>
+                <!-- B1 -->
+                <div class="mb-8"><h3 class="font-bold text-2xl mb-4 text-brand-dark border-l-4 border-purple-500 pl-3">Trình độ B1</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <a href="https://youtu.be/ZYtbjGxh7Ps" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/ZYtbjGxh7Ps/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                        <a href="https://youtu.be/YYN9wzkeoDU" target="_blank" class="block group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition"><img src="https://img.youtube.com/vi/YYN9wzkeoDU/mqdefault.jpg" class="w-full"><div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-play text-white text-3xl"></i></div></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHINESE -->
+            <div id="chinese" class="tab-content">
+                <div class="relative h-48 rounded-2xl overflow-hidden mb-8 shadow-lg"><img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="https://youtu.be/NSZ_hdDkyVs" target="_blank" class="block group"><img src="https://img.youtube.com/vi/NSZ_hdDkyVs/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A1: Bài 1</p></a>
+                    <a href="https://youtube.com/shorts/OsWPDORmlGo" target="_blank" class="block group"><img src="https://img.youtube.com/vi/OsWPDORmlGo/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A1: Shorts</p></a>
+                    <a href="https://youtu.be/u_a6bM2ryNo" target="_blank" class="block group"><img src="https://img.youtube.com/vi/u_a6bM2ryNo/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A2: Bài 1</p></a>
+                    <a href="https://youtu.be/4cbXDg2LMXc" target="_blank" class="block group"><img src="https://img.youtube.com/vi/4cbXDg2LMXc/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Bài 1</p></a>
+                    <a href="https://youtu.be/lkU638T5un8" target="_blank" class="block group"><img src="https://img.youtube.com/vi/lkU638T5un8/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Bài 2</p></a>
+                </div>
+            </div>
+
+            <!-- JAPANESE -->
+            <div id="japanese" class="tab-content">
+                <div class="relative h-48 rounded-2xl overflow-hidden mb-8 shadow-lg"><img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="https://youtube.com/shorts/Fh8mmavL82g" target="_blank" class="block group"><img src="https://img.youtube.com/vi/Fh8mmavL82g/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A1: Shorts</p></a>
+                    <a href="https://youtu.be/KBD6-6P1xKg" target="_blank" class="block group"><img src="https://img.youtube.com/vi/KBD6-6P1xKg/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A1: Bài 1</p></a>
+                    <a href="https://youtu.be/axCVnucOHqc" target="_blank" class="block group"><img src="https://img.youtube.com/vi/axCVnucOHqc/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A2: Bài 1</p></a>
+                    <a href="https://youtu.be/V1vlIlIZxd0" target="_blank" class="block group"><img src="https://img.youtube.com/vi/V1vlIlIZxd0/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A2: Bài 2</p></a>
+                    <a href="https://youtu.be/O70-s3H63k0" target="_blank" class="block group"><img src="https://img.youtube.com/vi/O70-s3H63k0/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Bài 1</p></a>
+                    <a href="https://youtu.be/1CI44-ptwc4" target="_blank" class="block group"><img src="https://img.youtube.com/vi/1CI44-ptwc4/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Bài 2</p></a>
+                </div>
+            </div>
+
+            <!-- KOREAN -->
+            <div id="korean" class="tab-content">
+                <div class="relative h-48 rounded-2xl overflow-hidden mb-8 shadow-lg"><img src="https://images.unsplash.com/photo-1517154421773-0529f29ea451?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="https://youtu.be/Jph8xk6xymk" target="_blank" class="block group"><img src="https://img.youtube.com/vi/Jph8xk6xymk/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">Trình độ A1</p></a>
+                    <a href="https://youtu.be/zfxCmZb_bZ0" target="_blank" class="block group"><img src="https://img.youtube.com/vi/zfxCmZb_bZ0/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">Trình độ A2</p></a>
+                    <a href="https://youtu.be/_YG2xY7BRtA" target="_blank" class="block group"><img src="https://img.youtube.com/vi/_YG2xY7BRtA/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Tập 1</p></a>
+                    <a href="https://youtu.be/WtQbiTEhhvc" target="_blank" class="block group"><img src="https://img.youtube.com/vi/WtQbiTEhhvc/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">B1: Tập 2</p></a>
+                    <a href="https://youtu.be/iiBNuXeh2E4" target="_blank" class="block group"><img src="https://img.youtube.com/vi/iiBNuXeh2E4/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">Trình độ B2</p></a>
+                    <a href="https://youtu.be/TRWNjEh0ZYA" target="_blank" class="block group"><img src="https://img.youtube.com/vi/TRWNjEh0ZYA/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">Trình độ C1</p></a>
+                </div>
+            </div>
+
+            <!-- GERMAN -->
+            <div id="german" class="tab-content">
+                <div class="relative h-48 rounded-2xl overflow-hidden mb-8 shadow-lg"><img src="https://images.unsplash.com/photo-1599946347371-68eb71b16afc?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="https://youtu.be/58U2IvsjSrk" target="_blank" class="block group"><img src="https://img.youtube.com/vi/58U2IvsjSrk/mqdefault.jpg" class="rounded-lg mb-2 shadow w-full group-hover:scale-105 transition"><p class="font-bold text-center">A2: Bài 1</p></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENT SECTION -->
+    <section id="event" class="py-20 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 text-red-600 font-bold text-sm mb-4 animate-bounce">
+                    <i class="fa-solid fa-fire"></i> SỰ KIỆN NỔI BẬT
+                </div>
+                <h2 class="text-4xl md:text-5xl font-heading font-extrabold text-brand-dark mb-4">
+                    Content Creator Challenge <span class="text-brand-primary">2025</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Sự kiện khuyến khích sinh viên ULIS sáng tạo nội dung podcast đa ngôn ngữ.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Rules -->
+                <div class="lg:col-span-7 space-y-8">
+                    <div class="bg-gray-50 p-8 rounded-3xl border border-gray-100 shadow-sm">
+                        <h3 class="text-2xl font-bold text-brand-dark mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-file-contract text-brand-primary"></i> Thể Lệ Tham Gia
+                        </h3>
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-user-check mt-1 text-brand-primary"></i> <span><strong>Đối tượng:</strong> Tất cả sinh viên ULIS.</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-microphone mt-1 text-brand-primary"></i> <span><strong>Sản phẩm:</strong> Audio 1-3 phút, ngôn ngữ tự chọn.</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-lightbulb mt-1 text-brand-primary"></i> <span><strong>Nội dung:</strong> Tự do sáng tạo (kể chuyện, văn hóa...).</span></li>
+                        </ul>
+                    </div>
+                    <!-- Form -->
+                    <div class="bg-white p-8 rounded-3xl border-2 border-brand-primary/20 shadow-lg">
+                        <h3 class="text-2xl font-bold text-brand-dark mb-6 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-brand-primary"></i> Nộp Bài</h3>
+                        <form onsubmit="handleSubmitContest(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-bold text-gray-700 mb-1">Họ tên</label><input type="text" required class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-brand-primary outline-none"></div>
+                                <div><label class="block text-sm font-bold text-gray-700 mb-1">Mã SV</label><input type="text" required class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-brand-primary outline-none"></div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">File Audio</label>
+                                <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                    <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                                        <i class="fa-solid fa-cloud-upload text-2xl text-gray-400"></i>
+                                        <p class="text-xs text-gray-500 mt-1">MP3, WAV, M4A</p>
+                                    </div>
+                                    <input type="file" class="hidden" accept=".mp3,.wav,.m4a" required />
+                                </label>
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-brand-primary text-white font-bold rounded-xl hover:bg-brand-dark transition shadow-md">Gửi Bài</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="lg:col-span-5">
+                    <div class="bg-gradient-to-br from-brand-dark to-brand-primary text-white p-8 rounded-3xl shadow-2xl h-full relative overflow-hidden">
+                        <i class="fa-solid fa-trophy absolute -bottom-10 -right-10 text-9xl text-white opacity-10 transform rotate-12"></i>
+                        <h3 class="text-2xl font-heading font-bold mb-8 text-center text-yellow-300">QUYỀN LỢI TOP 20</h3>
+                        <div class="space-y-6 relative z-10">
+                            <div class="flex gap-4 p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">
+                                <div class="text-3xl text-yellow-400"><i class="fa-solid fa-star"></i></div>
+                                <div><h4 class="font-bold text-lg">Official Voice Talent</h4><p class="text-sm text-blue-100">Trở thành thành viên chính thức.</p></div>
+                            </div>
+                            <div class="flex gap-4 p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">
+                                <div class="text-3xl text-yellow-400"><i class="fa-solid fa-chalkboard-user"></i></div>
+                                <div><h4 class="font-bold text-lg">Đào tạo chuyên sâu</h4><p class="text-sm text-blue-100">Kỹ năng viết, nói, thu âm.</p></div>
+                            </div>
+                            <div class="flex gap-4 p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/10">
+                                <div class="text-3xl text-yellow-400"><i class="fa-solid fa-certificate"></i></div>
+                                <div><h4 class="font-bold text-lg">Quà tặng độc quyền</h4><p class="text-sm text-blue-100">Giấy chứng nhận & Merch.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-24 bg-brand-gray relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-brand-primary text-xs font-bold tracking-wider uppercase mb-4">Về Dự Án</span>
+                <h2 class="text-4xl md:text-5xl font-heading font-extrabold text-brand-dark mb-8 leading-tight">Chào mừng đến với <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-cyan-500">ULIS GLOBAL VOICES</span></h2>
+                <div class="text-lg text-gray-600 leading-relaxed text-justify md:text-center font-light space-y-4">
+                    <p>Chúng tôi là những sinh viên đến từ <strong class="text-brand-dark font-bold">Trường Đại học Ngoại ngữ – ĐHQGHN</strong>, cùng chung mong muốn tạo ra một không gian nơi tiếng nói, câu chuyện và góc nhìn của sinh viên được lan tỏa bằng nhiều ngôn ngữ khác nhau.</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-brand-dark to-brand-primary rounded-3xl p-8 md:p-12 text-white shadow-2xl mb-12 relative overflow-hidden">
+                <i class="fa-solid fa-quote-right absolute top-4 right-8 text-8xl text-white opacity-10"></i>
+                <h3 class="text-2xl font-heading font-bold mb-4 flex items-center gap-3"><i class="fa-solid fa-hand-holding-heart"></i> ULIS GLOBAL VOICES giúp gì cho bạn?</h3>
+                <p class="text-blue-50 text-lg leading-relaxed">Đây sẽ là không gian giúp bạn <strong class="text-white">luyện nghe, nói ngoại ngữ mỗi ngày</strong> một cách tự nhiên và thú vị hơn.</p>
+            </div>
+
+             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card p-6 rounded-2xl text-center border border-gray-200"><i class="fa-solid fa-clock text-green-500 text-3xl mb-3 block"></i><h4 class="font-bold mb-1">Tiết kiệm</h4></div>
+                <div class="glass-card p-6 rounded-2xl text-center border border-gray-200"><i class="fa-solid fa-ban text-red-500 text-3xl mb-3 block"></i><h4 class="font-bold mb-1">Không Quảng Cáo</h4></div>
+                <div class="glass-card p-6 rounded-2xl text-center border border-gray-200"><i class="fa-solid fa-microphone-lines text-purple-600 text-3xl mb-3 block"></i><h4 class="font-bold mb-1">Đa Dạng Chủ Đề</h4></div>
+                <div class="glass-card p-6 rounded-2xl text-center border border-gray-200"><i class="fa-solid fa-users text-brand-primary text-3xl mb-3 block"></i><h4 class="font-bold mb-1">Kết Nối</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-20 bg-blue-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-primary font-bold tracking-wide uppercase text-sm mb-2">Góc Bạn Đọc</h2>
+                <h3 class="text-3xl md:text-4xl font-heading font-bold text-gray-900">Sinh Viên Nói Gì Về Chúng Tôi?</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Person 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg relative">
+                    <i class="fa-solid fa-quote-left text-brand-light opacity-30 text-6xl absolute top-4 left-4"></i>
+                    <div class="relative z-10">
+                         <h4 class="font-bold text-gray-900 text-sm">Nguyễn Ánh Tuyết</h4>
+                         <p class="text-gray-600 italic text-sm mt-2">"Website rất dễ dùng, các tập podcast được phân theo ngôn ngữ nên mình tìm nội dung phù hợp cực nhanh."</p>
+                    </div>
+                </div>
+                <!-- Person 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg relative">
+                     <div class="relative z-10">
+                         <h4 class="font-bold text-gray-900 text-sm">Vũ Khánh Huyền</h4>
+                         <p class="text-gray-600 italic text-sm mt-2">"Mình thích nhất phần mô tả ngắn dưới mỗi tập, nhìn vào là biết chủ đề có hợp không. Giao diện đẹp và hiện đại!"</p>
+                    </div>
+                </div>
+                <!-- Person 3 -->
+                 <div class="bg-white p-8 rounded-2xl shadow-lg relative">
+                     <div class="relative z-10">
+                         <h4 class="font-bold text-gray-900 text-sm">Mai Thị Cẩm Nhung</h4>
+                         <p class="text-gray-600 italic text-sm mt-2">"Nhờ ULIS GLOBAL VOICES mà mình có thêm động lực luyện nghe mỗi ngày. Đặc biệt là giọng sinh viên ULIS nghe rất gần gũi."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT & FOOTER -->
+    <section id="contact" class="py-20 bg-brand-primary relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Đừng Bỏ Lỡ Tập Mới Nhất!</h2>
+            <form onsubmit="handleSubscribe(event)" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mt-8">
+                <input type="email" placeholder="Nhập địa chỉ email..." required class="flex-1 px-6 py-4 rounded-full border-none focus:ring-4 outline-none text-gray-700">
+                <button type="submit" class="px-8 py-4 bg-brand-dark text-white font-bold rounded-full hover:bg-gray-900 transition shadow-lg">Đăng Ký</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <span class="font-heading font-bold text-lg block mb-4 text-brand-light">ULIS Global Voices</span>
+                    <p class="text-gray-400 text-sm leading-relaxed">Dự án podcast phi lợi nhuận của sinh viên Trường Đại học Ngoại ngữ - ĐHQGHN.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white">Khám Phá</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#library" class="hover:text-brand-primary transition">Thư viện Podcast</a></li>
+                        <li><a href="#event" class="hover:text-brand-primary transition">Sự kiện HOT</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white">Liên Hệ</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-envelope mt-1 text-brand-primary"></i> <span class="break-all">theenglishglobalvoices@gmail.com</span></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-brand-primary"></i> <span>0334672987</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-location-dot mt-1 text-brand-primary"></i> <span>Số 2 Phạm Văn Đồng, Cầu Giấy, Hà Nội</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6 text-white">Mạng xã hội</h4>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary transition"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-primary transition"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500"><p>&copy; 2024 ULIS Global Voices.</p></div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if(btn && menu) btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+
+        function openTab(langName) {
+            var tabcontent = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; tabcontent[i].classList.remove("active"); }
+            var tablinks = document.getElementsByClassName("tab-btn");
+            for (var i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active", "bg-brand-primary", "text-white"); tablinks[i].classList.add("text-brand-primary"); }
+            var selectedTab = document.getElementById(langName);
+            if(selectedTab) { selectedTab.style.display = "block"; setTimeout(() => selectedTab.classList.add("active"), 10); }
+            event.currentTarget.classList.remove("text-brand-primary");
+            event.currentTarget.classList.add("active", "bg-brand-primary", "text-white");
+        }
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('shadow-md');
+            else navbar.classList.remove('shadow-md');
+        });
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            alert("Đăng ký thành công!");
+            e.target.reset();
+        }
+
+        function handleSubmitContest(e) {
+            e.preventDefault();
+            alert("Nộp bài thành công! Chúng tôi sẽ liên hệ sớm.");
+            e.target.reset();
+        }
+    </script>
+</body>
+</html>
